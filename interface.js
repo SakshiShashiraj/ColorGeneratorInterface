@@ -1,8 +1,7 @@
-
-function getUserPrompt() {
+function getUserInput() {
 	const userInput = [];
 	for (i = 0; i < 5; i++) {
-		let color = prompt("Enter color ${i + 1} as [R,G,B] or 'N' for a random color: ");
+		let color = document.getElementById("color${i}").value.trim();
 		if (color. toLowerCase === `n`) {
 			userInput.push("N");
 		} else {
@@ -20,6 +19,7 @@ function getUserPrompt() {
 			}
 		}
 	}
+	return userInput;
 }
 
 // example result - note that the input colors may change as well, by a small amount.
@@ -28,7 +28,7 @@ function generatePalette() {
 	var url = "http://colormind.io/api/";
 	var data = {
 		model : "default",
-		input : ["N","N","N","N","N"]
+		input : getUserInput()
 	}
 
 	var xhr = new XMLHttpRequest();
@@ -36,7 +36,7 @@ function generatePalette() {
 		const status = xhr.status;
 		if (xhr.readyState == 4 && (status === 0 || status >= 200 && status < 400)) {
 			var palette = JSON.parse(xhr.responseText).result;
-			// display palette
+			displayPalette();
 		} else{
 			console.error("There was an error with the request!");
 		}
