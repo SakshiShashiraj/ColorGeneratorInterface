@@ -42,11 +42,20 @@ function generatePalette() {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = () => {
 		const status = xhr.status;
-		if ((status >= 200 && status < 400)) {
-			var palette = JSON.parse(xhr.responseText).result;
-			displayPalette(palette);
+		if (xhr.readyState == 4 && (status === 0 || (status >= 200 && status < 400))) {
+			try{
+				const palette = JSON.parse(xhr.responseText).result;
+				if (palette){
+					displayPalette(palette);
+				} else {
+					console.error("Unexepected JSON structure:", JSON.parse(xhr.responseText));
+				}
+			}
+			catch (e) {
+				console.error("Failed to parse JSON response:", e.message);
+			}
 		} else{
-			console.error("There was an error with the request!");
+		console.error("There was an error with the request! Status:", xhr.status);
 		}
 	}
 
@@ -60,7 +69,7 @@ function displayPalette(palette) {
 
 	palette.forEach(color => {
 		const colorDiv = document.createElement("div");
-		colorDiv.style.backgroundColor = 'rgb(${color[0]}, ${color[1]}, ${color[2]})';
+		colorDiv.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
 		colorDiv.style.width = "100px";
 		colorDiv.style.height = "100px";
 		colorDiv.style.display = "inline-block";
