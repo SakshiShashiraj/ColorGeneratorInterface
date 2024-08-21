@@ -1,19 +1,65 @@
-var url = "http://colormind.io/api/";
-var data = {
-	model : "default",
-	input : [[44,43,44],[90,83,82],"N","N","N"]
-}
 
-var http = new XMLHttpRequest();
-
-http.onreadystatechange = function() {
-	if(http.readyState == 4 && http.status == 200) {
-		var palette = JSON.parse(http.responseText).result;
+function getUserPrompt() {
+	const userInput = [];
+	for (i = 0; i < 5; i++) {
+		let color = prompt("Enter color ${i + 1} as [R,G,B] or 'N' for a random color: ");
+		if (color. toLowerCase === `n`) {
+			userInput.push("N");
+		} else {
+			try {
+				let rgbArray = JSON.parse(color);
+				if (Array.isArray(rgbArray) && rbgArray.length === 3) {
+					userInput.push(rbgArray);
+				} else {
+					throw new Error("Incorrect format for an rbgArray detected. Throwing error.");
+				} 
+			}
+			catch {
+				console.error("Invaid input format. Using 'N' instead.")
+				userInput.push("N");
+			}
+		}
 	}
 }
 
-http.open("POST", url, true);
-http.send(JSON.stringify(data));
-
+// example result - note that the input colors may change as well, by a small amount.
 // [[42, 41, 48], [90, 83, 84], [191, 157, 175], [188, 138, 125], [215, 170, 66]]
-// note that the input colors have changed as well, by a small amount
+function generatePalette() {
+	var url = "http://colormind.io/api/";
+	var data = {
+		model : "default",
+		input : ["N","N","N","N","N"]
+	}
+
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = () => {
+		const status = xhr.status;
+		if (xhr.readyState == 4 && (status === 0 || status >= 200 && status < 400)) {
+			var palette = JSON.parse(xhr.responseText).result;
+			// display palette
+		} else{
+			console.error("There was an error with the request!");
+		}
+	}
+
+	xhr.open("POST", url, true);
+	xhr.send(JSON.stringify(data));
+}
+
+function displayPalette(palette) {
+	const container = document.getElementById("palette-container");
+	container.innerHTTL = ""; //clear content
+
+	palette.forEach(color => {
+		const colorDiv = document.createElement("div");
+		colorDiv.style.backgroundColor = 'rbg(${color[0]}, ${color[1]}, ${color[2]})';
+		colorDiv.style.width = "100px";
+		colorDiv.style.height = "100px";
+		colorDiv.style.display = "inline-block";
+		colorDiv.style.margin = "10px";
+		container.appendChild(colorDiv);
+	});
+
+} 
+
+
