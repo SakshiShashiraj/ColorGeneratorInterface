@@ -31,7 +31,7 @@ label {
 }
 
 input[type="text"] {
-    width: 100%;
+    width: 96%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
@@ -40,7 +40,7 @@ input[type="text"] {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #4847FF;
     color: #fff;
     border: none;
     border-radius: 3px;
